@@ -84,65 +84,106 @@ $(document).ready(function(){
       let elem = $(this).attr('rel')
 
       $('.modal-body').html($('#'+elem).html())
+
       $('.modal-header h5.modal-title').html($(this).text())
 
       let myModal = new bootstrap.Modal($('#modelId'))
 
       myModal.show()
 
-         /*
+      })   
+   /*
    * TODO: incrementar a validação
    * - checar se o nome é válido (mais de 2 caracteres)
    * - checar se o email é válido com ao menos um "@" e "."
    * - checar se o cpf é válido com regex /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/
    */
 
-   function validate( elem ){
-      if( elem.val() == '') {
 
-         console.log('o campo de'+ elem.attr('name') + 'é obrigatório')
 
-         elem.parent().find('.text-muted').show()
+      function validate( elem ){
+         if( elem.val() == '') {
 
-         elem.addClass('invalid')
+            console.log('o campo de '+ elem.attr('name') +' é obrigatório')
 
-         return false
-      }  else {
-         elem.parent().find('.text-muted').hide()
-         elem.removeClass('invalid')
+            elem.parent().find('.text-muted').show()
+
+            elem.addClass('invalid')
+
+            return false
+         
+         } else {
+
+            elem.parent().find('.text-muted').hide()
+            elem.removeClass('invalid')
+
+         }
+
       }
-   }
 
-  
+
+      $('body').on('submit', '.modal-body .form', function(e){
+
+         e.preventDefault()
+
+         const inputName = $('#nome')
+         const inputEmail = $('#email')
+         const inputCPF = $('#cpf')
+
+         validate(inputName)
+         validate(inputEmail)
+         validate(inputCPF)
+
+         if(inputEmail.hasClass('invalid') || inputName.hasClass('invalid') || inputCPF.hasClass('invalid')){
+            console.log('verificar os campos obrigatório')
+            return false 
+         } else {
+            $(this).submit()
+            
+         } 
+
+      })
+
+      
+      $('body').on('blur', '#nome', function(){
+         validate($(this))
+         
+      })
+
+      $('body').on('blur', '#email', function(){
+         validate($(this))
+      })
+
+      $('body').on('blur', '#cpf', function(){
+         validate($(this))
+         $('#cpf').mask('000.000.000-00');
+         
+      })
+
+
+      $('body').on('focus',' #date', function(){
+         $(this).datepicker()
+      })
+
+      $('body').on('blur', '#date', function(){
+         validate($(this))
+         $('#date').mask('00/00/0000');  
+      })
+      
+      $('body').on('blur', '#time', function(){
+         validate($(this))
+         $('#time').mask('00:00:00');
+      })
+
+      $('body').on('blur', '#cep', function(){
+         validate($(this))
+         $('#cep').mask('00000-000');
+      })
+
+      $('body').on('blur', '#phone', function(){
+         validate($(this))
+         $('#phone').mask('00 00000-0000');
+      })
 
 
 })
-})
-
-function validaEmail(elem){
-
-   elemento.addEventListener('focusout', function(event) {
-
-       event.preventDefault();
-
-       const emailValido = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?/i;
-       if(this.value.match(emailValido)) {
-           document.querySelector('.mensagem').innerHTML = "";
-           this.classList.remove('erro');
-           this.parentNode.classList.remove('erro');
-       } else {
-           document.querySelector('.mensagem').innerHTML = "verifique o preenchimento dos campos em destaque";
-           this.classList.add('erro');
-           this.parentNode.classList.add('erro');
-           return false;
-       }
-
-   });
-
-}
-
-let camposEmail = document.querySelectorAll('input.email');
-
-for( let emFoco of camposEmail) {
-   validaEmail(emFoco);
-}
